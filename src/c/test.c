@@ -11,55 +11,9 @@
 #define BUS_NAME_INDEX 1
 #define BUS_TIME_INDEX 2
 
-static Bus* bus;
-
 static int num_bus = 0;
 static Window *s_bus_list_window;
 static MenuLayer *s_bus_list_menu_layer;
-
-char * strtok(s, delim)	register char *s;	register const char *delim;{
-	register char *spanp;
-	register int c, sc;
-	char *tok;
-	static char *last;
-
-	if (s == NULL && (s = last) == NULL)
-		return (NULL);
-	/*
-	 * Skip (span) leading delimiters (s += strspn(s, delim), sort of).
-	 */
-cont:
-	c = *s++;
-	for (spanp = (char *)delim; (sc = *spanp++) != 0;) {
-		if (c == sc)
-			goto cont;
-	}
-
-	if (c == 0) {		/* no non-delimiter characters */
-		last = NULL;
-		return (NULL);
-	}
-	tok = s - 1;
-	/*
-	 * Scan token (scan for delimiters: s += strcspn(s, delim), sort of).
-	 * Note that delim must have one NUL; we stop if we see that, too.
-	 */
-	for (;;) {
-		c = *s++;
-		spanp = (char *)delim;
-		do {
-			if ((sc = *spanp++) == c) {
-				if (c == 0)
-					s = NULL;
-				else
-					s[-1] = 0;
-				last = s;
-				return (tok);
-			}
-		} while (sc != 0);
-	}
-	/* NOTREACHED */
-}
 
 static uint16_t menu_get_num_sections_callback(MenuLayer *menu_layer, void *data) {
   return NUM_MENU_SECTIONS;
@@ -135,12 +89,11 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
   if(num_bus == 0){
     menu_cell_basic_draw(ctx, cell_layer, "NO ENTRIE RETURNED !", NULL, NULL);
     return;
-  }  
+  } 
   
-  Bus* buses = ((Bus*)data);
-  if(NULL != buses ){
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "bus[%d].name = '%s'.", cell_index->row, buses[0].name); // bus[cell_index->row].name, bus[cell_index->row].time); 
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "bus[%d].time = '%s'.", cell_index->row, buses[0].time);
+  Bus* busdata = ((Bus*)data);
+  if(NULL != busdata ){
+       menu_cell_basic_draw(ctx, cell_layer, busdata[cell_index->row].name, busdata[cell_index->row].time, NULL);
   }  
 }
 static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *data) {
@@ -155,15 +108,20 @@ static void bus_list_window_load(Window *window) {
   
   //reception des bus   
   char buf[] ="1,amine,17:55|88,salim,18:44|3,karim,19:00|88,salim,18:44|3,karim,19:00"; //window_get_user_data(s_bus_list_window); 
-  bus_data_init(buf, '|');
-  num_bus = bus_data_count(bus_data_get_global());
-  printf("number of buses: %d", num_bus);
-  print_bus_list(bus_data_get_buses());
+  char delimiter = '|';
   
-  //window_set_user_data(s_bus_list_window, bus_data_get_buses());  
+  RawBusData* rawdata = bus_raw_data_create(buf, delimiter);
+  Bus* busdata = bus_list_create(rawdata);
+  get_bus_list(rawdata, busdata);
+  num_bus = rawdata->numberOfBus;
+  printf("number of buses: %d", num_bus);
+  print_bus_list(rawdata, busdata);
+  
   s_bus_list_menu_layer = menu_layer_create(bounds);
   
-  menu_layer_set_callbacks(s_bus_list_menu_layer, bus_data_get_buses()  , (MenuLayerCallbacks){
+ // printf("%p\n", bus_data_get_buses()[0].name);
+//    char* patrick = malloc(16); strcpy(patrick, "patrick");
+  menu_layer_set_callbacks(s_bus_list_menu_layer, busdata, (MenuLayerCallbacks){
     .get_num_sections = menu_get_num_sections_callback,
     .get_num_rows = menu_get_num_rows_callback,
     .get_header_height = PBL_IF_RECT_ELSE(menu_get_header_height_callback, NULL),
@@ -178,9 +136,15 @@ static void bus_list_window_load(Window *window) {
   layer_add_child(window_layer, menu_layer_get_layer(s_bus_list_menu_layer));
 }
 static void bus_list_window_unload(Window *window) {
+   // APP_LOG(APP_LOG_LEVEL_DEBUG, "unload");
+
+  //  print_bus_list(bus_data_get_buses());
+
   menu_layer_destroy(s_bus_list_menu_layer);
-  bus_data_deinit();
+  
+  //bus_data_deinit();
 }
+
 void bus_list_window_create() {
   s_bus_list_window = window_create();
   window_set_window_handlers(s_bus_list_window, (WindowHandlers) {

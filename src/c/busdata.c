@@ -1,9 +1,11 @@
-#include <stdio.h>
 #include "busdata.h"
 
-
-static RawBusData* global = NULL;
-static Bus* buses = NULL;
+Bus* get_bus_list_instance(const RawBusData* rawBus, Bus* bus){
+	if(NULL == bus){
+		bus = malloc(sizeof(Bus) * rawBus->numberOfBus);
+	}
+	return bus;
+}
 
 uint16_t bus_occurences(char* data,  char delim) {
   if (NULL == data) {
@@ -23,7 +25,10 @@ uint16_t bus_occurences(char* data,  char delim) {
   return ++count;
 }
 
-RawBusData* bus_data_create(char* data, char delim) {
+Bus* bus_list_create(const RawBusData* rawBus){
+    return malloc(sizeof(Bus) * rawBus->numberOfBus);
+}
+RawBusData* bus_raw_data_create(char* data, char delim) {
   RawBusData* state = malloc(sizeof(RawBusData));
   state->busString = data;
   state->delim = delim;
@@ -31,76 +36,89 @@ RawBusData* bus_data_create(char* data, char delim) {
   return state;
 }
 
-void bus_data_destroy(RawBusData* state) {
-  if (NULL == state && NULL == buses) {
-    return;
-  }
-  if(NULL == state){ 
-    free(state);
-    return;
-  }
-    free(state);
-    free(buses);
-  
-  return;
-}
+void bus_destroy(RawBusData* rawBus, Bus* bus) {
+   if (NULL == rawBus && NULL == bus) {
+     return;
+   }
+   if(NULL == rawBus){
+     free(bus);
+     return;
+   }
+     free(rawBus);
+     free(bus);
 
-void bus_data_deinit() {
-  bus_data_destroy(global);
-  global = NULL;
-}
+   return;
+ }
 
-Bus* get_bus_data(RawBusData* state){// , Bus* bus){
-
-   uint16_t i = 0;
+Bus* get_bus_list(const RawBusData* rawBus, Bus* bus){
+  uint16_t i = 0;
   char delim[2];
-  delim[0] = state->delim;
+  delim[0] = rawBus->delim;
   delim[1] = '\0';
-  
-   char *p = strtok (state->busString, delim);
-   char *array[state->numberOfBus];
+
+   char *p = strtok (rawBus->busString, delim);
+   char *array[rawBus->numberOfBus];
 
    while (p != NULL)
    {
        array[i++] = p;
        p = strtok (NULL, "|");
    }
-  
-  buses = malloc(sizeof(Bus) * state->numberOfBus );
 
-   for (i = 0; i < state->numberOfBus ; ++i){
-   	buses[i].id = strtok (array[i], ",");
-   	buses[i].name= strtok (NULL, ",");
-   	buses[i].time= strtok (NULL, ",");
+   for (i = 0; i < rawBus->numberOfBus ; ++i){
+	   strcpy(bus[i].id, strtok (array[i], ","));
+	   strcpy(bus[i].name, strtok (NULL, ","));
+	   strcpy(bus[i].time, strtok (NULL, ","));
    }
-  
-  return buses;
+
+  return bus;
 }
 
-void bus_data_init(char* data, char delim) {
-  bus_data_deinit();
-  global = bus_data_create(data, delim);
-  buses = get_bus_data(bus_data_get_global());
-}
-
-void print_bus_list(Bus* buses){
-  if(NULL == buses) return;
-    for (int i = 0; i < bus_data_get_global()->numberOfBus ; ++i){
-    	printf("bus[%d] = %s\n", i, buses[i].id);
-    	printf("bus[%d] = %s\n", i, buses[i].name);
-    	printf("bus[%d] = %s\n", i, buses[i].time);
+void print_bus_list(const RawBusData* rawBus, const Bus* bus){
+  if(NULL == bus) return;
+    for (int i = 0; i < rawBus->numberOfBus ; ++i){
+    	printf("bus[%d] = %s\n", i, bus[i].id);
+    	printf("bus[%d] = %s\n", i, bus[i].name);
+    	printf("bus[%d] = %s\n", i, bus[i].time);
+    	printf("\n");
     }
-  
 }
 
-uint16_t bus_data_count(RawBusData* state) {
-  return state->numberOfBus;
+char * strtok(s, delim)	register char *s;	register const char *delim;{
+	register char *spanp;
+	register int c, sc;
+	char *tok;
+	static char *last;
+	
+	if (s == NULL && (s = last) == NULL)
+		return (NULL);
+	
+cont:
+	c = *s++;
+	for (spanp = (char *)delim; (sc = *spanp++) != 0;) {
+		if (c == sc)
+			goto cont;
+	}
+	
+	if (c == 0) {		/* no non-delimiter characters */
+		last = NULL;
+		return (NULL);
+	}
+	tok = s - 1;
+
+	for (;;) {
+		c = *s++;
+		spanp = (char *)delim;
+		do {
+			if ((sc = *spanp++) == c) {
+				if (c == 0)
+					s = NULL;
+				else
+					s[-1] = 0;
+				last = s;
+				return (tok);
+			}
+		} while (sc != 0);
+	}
 }
 
-Bus* bus_data_get_buses(void) {
-  return buses;
-}
-
-RawBusData* bus_data_get_global(void) {
-  return global;
-}

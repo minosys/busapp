@@ -1,4 +1,6 @@
 #pragma once
+#include <stdint.h>
+#include <stdio.h>
 #include <pebble.h>
 
 typedef struct {
@@ -8,16 +10,22 @@ typedef struct {
 }RawBusData;
 
 typedef struct {
-  char* id; // a modifier
-  char* name;  // Name of bus
-  char* time;       // description of bus
+  char id[5]; // a modifier
+  char name[20];  // Name of bus
+  char time[20];       // description of bus
 }Bus;
 
-void bus_data_init(char* data, char delim);
-void bus_data_destroy(RawBusData* state);
-void bus_data_deinit();
-RawBusData* bus_data_get_global(void);
-uint16_t bus_data_count(RawBusData* state);
-Bus* get_bus_data(RawBusData* state);
-void print_bus_list(Bus* buses);
-Bus* bus_data_get_buses(void);
+Bus* get_bus_list_instance(const RawBusData* rawBus, Bus* bus);
+
+uint16_t bus_occurences(char* data,  char delim);
+
+RawBusData* bus_raw_data_create(char* data, char delim);
+
+Bus* bus_list_create(const RawBusData* rawBus);
+
+void bus_destroy(RawBusData* rawBus, Bus* bus);
+
+Bus* get_bus_list(const RawBusData* rawBus, Bus* bus);
+
+void print_bus_list(const RawBusData* rawBus, const Bus* bus);
+
