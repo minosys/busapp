@@ -1,0 +1,156 @@
+{
+    "author": "minodev",
+    "dependencies": {},
+    "keywords": [],
+    "name": "zapp",
+    "pebble": {
+        "displayName": "zapp",
+        "enableMultiJS": true,
+        "messageKeys": {
+            "ARRIVE_TIME_KEY": 2,
+            "BUS_ICON_KEY": 0,
+            "BUS_NAME_KEY": 1
+        },
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/picto_64_s",
+                    "name": "PICTO_64_S",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_41_s",
+                    "name": "PICTO_41_S",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_40_s",
+                    "name": "PICTO_40_S",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_35_s",
+                    "name": "PICTO_35_S",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_c1_s",
+                    "name": "PICTO_C1_S",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_14_s",
+                    "name": "PICTO_14_S",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_err_s",
+                    "name": "PICTO_ERR_S",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_c4_s",
+                    "name": "PICTO_C4_S",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_err",
+                    "name": "PICTO_ERR",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_41",
+                    "name": "PICTO_41",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_40",
+                    "name": "PICTO_40",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_35",
+                    "name": "PICTO_35",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_c1",
+                    "name": "PICTO_C1",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_14",
+                    "name": "PICTO_14",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_64",
+                    "name": "PICTO_64",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/picto_c4",
+                    "name": "PICTO_C4",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/brains_watch",
+                    "name": "IMAGE_BACKGROUND_BRAINS",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/binary_watch",
+                    "name": "IMAGE_MENU_ICON_BINARY_WATCH",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/sector_watch",
+                    "name": "IMAGE_MENU_ICON_SECTOR_WATCH",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/big_watch",
+                    "name": "IMAGE_MENU_ICON_BIG_WATCH",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/weather_icon",
+                    "name": "WEATHER_ICON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite",
+            "basalt"
+        ],
+        "uuid": "42cfbee1-625b-436f-871f-53026d807cc7",
+        "watchapp": {
+            "watchface": false
+        }
+    },
+    "version": "1.0.0"
+}
